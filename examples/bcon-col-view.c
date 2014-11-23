@@ -55,7 +55,7 @@ col_view_create(const char * stub, ...)
             break;
          case ELE_LIMIT: {
             int i = va_arg(ap, int);
-            BCON_APPEND_CTX(bson, &ctx, "limit", BCON_INT32(i));
+            BCON_APPEND_CTX(bson, &ctx, "limit", BCON_INT64(i));
             break;
          }
          case ELE_QUERY:
@@ -85,7 +85,7 @@ main (int   argc,
    char * json;
 
    bson = COL_VIEW_CREATE(
-      SORT("a", BCON_INT32(1)),
+      SORT("a", BCON_INT64(1)),
       QUERY("hello", "world"),
       LIMIT(10)
    );

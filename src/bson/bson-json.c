@@ -429,11 +429,7 @@ _bson_json_read_integer (void    *_ctx, /* IN */
    if (rs == BSON_JSON_REGULAR) {
       BASIC_YAJL_CB_BAIL_IF_NOT_NORMAL ("integer");
 
-      if (val <= INT32_MAX) {
-         bson_append_int32 (STACK_BSON_CHILD, key, (int)len, (int)val);
-      } else {
-         bson_append_int64 (STACK_BSON_CHILD, key, (int)len, val);
-      }
+      bson_append_int64 (STACK_BSON_CHILD, key, (int)len, val);
    } else if (rs == BSON_JSON_IN_BSON_TYPE || rs ==
               BSON_JSON_IN_BSON_TYPE_TIMESTAMP_VALUES) {
       switch (bs) {
@@ -889,7 +885,6 @@ _bson_json_read_end_map (void *_ctx) /* IN */
       case BSON_TYPE_CODE:
       case BSON_TYPE_SYMBOL:
       case BSON_TYPE_CODEWSCOPE:
-      case BSON_TYPE_INT32:
       case BSON_TYPE_TIMESTAMP:
       default:
          _bson_json_read_set_error (reader, "Unknown type %d", bson->bson_type);

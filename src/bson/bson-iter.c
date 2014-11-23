@@ -665,9 +665,6 @@ fill_data_fields:
          }
       }
       break;
-   case BSON_TYPE_INT32:
-      iter->next_off = o + 4;
-      break;
    case BSON_TYPE_MAXKEY:
    case BSON_TYPE_MINKEY:
    case BSON_TYPE_NULL:
@@ -837,8 +834,6 @@ bson_iter_as_bool (const bson_iter_t *iter) /* IN */
       return !(bson_iter_double (iter) == 0.0);
    case BSON_TYPE_INT64:
       return !(bson_iter_int64 (iter) == 0);
-   case BSON_TYPE_INT32:
-      return !(bson_iter_int32 (iter) == 0);
    case BSON_TYPE_UTF8:
       return true;
    case BSON_TYPE_NULL:
@@ -877,36 +872,6 @@ bson_iter_double (const bson_iter_t *iter) /* IN */
 
    return 0;
 }
-
-
-/*
- *--------------------------------------------------------------------------
- *
- * bson_iter_int32 --
- *
- *       Retrieves the value of the field of type BSON_TYPE_INT32.
- *
- * Returns:
- *       A 32-bit signed integer.
- *
- * Side effects:
- *       None.
- *
- *--------------------------------------------------------------------------
- */
-
-int32_t
-bson_iter_int32 (const bson_iter_t *iter) /* IN */
-{
-   bson_return_val_if_fail (iter, 0);
-
-   if (ITER_TYPE (iter) == BSON_TYPE_INT32) {
-      return bson_iter_int32_unsafe (iter);
-   }
-
-   return 0;
-}
-
 
 /*
  *--------------------------------------------------------------------------
@@ -971,8 +936,6 @@ bson_iter_as_int64 (const bson_iter_t *iter) /* IN */
       return (int64_t)bson_iter_double (iter);
    case BSON_TYPE_INT64:
       return bson_iter_int64 (iter);
-   case BSON_TYPE_INT32:
-      return (int64_t)bson_iter_int32 (iter);
    default:
       return 0;
    }
@@ -1872,13 +1835,6 @@ bson_iter_visit_all (bson_iter_t          *iter,    /* INOUT */
             }
          }
          break;
-      case BSON_TYPE_INT32:
-
-         if (VISIT_INT32 (iter, key, bson_iter_int32 (iter), data)) {
-            return true;
-         }
-
-         break;
       case BSON_TYPE_TIMESTAMP:
          {
             uint32_t timestamp;
@@ -1959,39 +1915,6 @@ bson_iter_overwrite_bool (bson_iter_t *iter,  /* IN */
       memcpy ((void *)(iter->raw + iter->d1), &value, 1);
    }
 }
-
-
-/*
- *--------------------------------------------------------------------------
- *
- * bson_iter_overwrite_int32 --
- *
- *       Overwrites the current BSON_TYPE_INT32 field with a new value.
- *       This is performed in-place and therefore no keys are moved.
- *
- * Returns:
- *       None.
- *
- * Side effects:
- *       None.
- *
- *--------------------------------------------------------------------------
- */
-
-void
-bson_iter_overwrite_int32 (bson_iter_t *iter,  /* IN */
-                           int32_t      value) /* IN */
-{
-   bson_return_if_fail (iter);
-
-   if (ITER_TYPE (iter) == BSON_TYPE_INT32) {
-#if BSON_BYTE_ORDER != BSON_LITTLE_ENDIAN
-      value = BSON_UINT32_TO_LE (value);
-#endif
-      memcpy ((void *)(iter->raw + iter->d1), &value, sizeof (value));
-   }
-}
-
 
 /*
  *--------------------------------------------------------------------------
@@ -2151,9 +2074,6 @@ bson_iter_value (bson_iter_t *iter) /* IN */
             &value->value.v_codewscope.code_len,
             &value->value.v_codewscope.scope_len,
             (const uint8_t **)&value->value.v_codewscope.scope_data);
-      break;
-   case BSON_TYPE_INT32:
-      value->value.v_int32 = bson_iter_int32 (iter);
       break;
    case BSON_TYPE_TIMESTAMP:
       bson_iter_timestamp (iter,

@@ -52,9 +52,9 @@ test_value_basic (void)
                    "code", BCON_CODE ("var a = function() {}"),
                    "symbol", BCON_SYMBOL ("my_symbol"),
                    "codewscope", BCON_CODEWSCOPE ("var a = 1;", &sub),
-                   "int32", BCON_INT32 (1234),
+                   "int32", BCON_INT64 (1234),
                    "timestamp", BCON_TIMESTAMP (1234, 4567),
-                   "int64", BCON_INT32 (4321),
+                   "int64", BCON_INT64 (4321),
                    "maxkey", BCON_MAXKEY,
                    "minkey", BCON_MINKEY);
 

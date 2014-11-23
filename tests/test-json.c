@@ -25,7 +25,7 @@ test_bson_as_json (void)
 
    b = bson_new();
    assert(bson_append_utf8(b, "utf8", -1, "bar", -1));
-   assert(bson_append_int32(b, "int32", -1, 1234));
+   assert(bson_append_int64(b, "int32", -1, 1234));
    assert(bson_append_int64(b, "int64", -1, 4321));
    assert(bson_append_double(b, "double", -1, 123.4));
    assert(bson_append_undefined(b, "undefined", -1));
@@ -42,7 +42,7 @@ test_bson_as_json (void)
    assert(bson_append_symbol(b, "symbol", -1, "var a = {};", -1));
 
    b2 = bson_new();
-   assert(bson_append_int32(b2, "0", -1, 60));
+   assert(bson_append_int64(b2, "0", -1, 60));
    assert(bson_append_document(b, "document", -1, b2));
    assert(bson_append_array(b, "array", -1, b2));
 
@@ -87,7 +87,7 @@ test_bson_as_json_int32 (void)
    char *str;
 
    b = bson_new();
-   assert(bson_append_int32(b, "foo", -1, 1234));
+   assert(bson_append_int64(b, "foo", -1, 1234));
    str = bson_as_json(b, &len);
    assert(len == 16);
    assert(!strcmp("{ \"foo\" : 1234 }", str));
@@ -358,12 +358,12 @@ test_bson_json_read(void)
 
    first = BCON_NEW(
       "foo", "bar",
-      "bar", BCON_INT32(12341),
+      "bar", BCON_INT64(12341),
       "baz", BCON_DOUBLE(123.456),
       "map", "{",
-         "a", BCON_INT32(1),
+         "a", BCON_INT64(1),
       "}",
-      "array", "[", BCON_INT32(1), BCON_INT32(2), BCON_INT32(3), BCON_INT32(4), "]",
+      "array", "[", BCON_INT64(1), BCON_INT64(2), BCON_INT64(3), BCON_INT64(4), "]",
       "null", BCON_NULL,
       "boolean", BCON_BOOL(true),
       "oid", BCON_OID(&oid),
@@ -514,10 +514,10 @@ test_bson_json_array (void)
    bool r;
 
    bson_init(&compare);
-   bson_append_int32(&compare, "0", 1, 0);
-   bson_append_int32(&compare, "1", 1, 1);
-   bson_append_int32(&compare, "2", 1, 2);
-   bson_append_int32(&compare, "3", 1, 3);
+   bson_append_int64(&compare, "0", 1, 0);
+   bson_append_int64(&compare, "1", 1, 1);
+   bson_append_int64(&compare, "2", 1, 2);
+   bson_append_int64(&compare, "3", 1, 3);
 
    r = bson_init_from_json (&b, json, -1, &error);
    if (!r) fprintf (stderr, "%s\n", error.message);
@@ -540,7 +540,7 @@ test_bson_array_as_json (void)
    assert (len == 3);
    bson_free (str);
 
-   BSON_APPEND_INT32 (&d, "0", 1);
+   BSON_APPEND_INT64 (&d, "0", 1);
    str = bson_array_as_json (&d, &len);
    assert (0 == strcmp (str, "[ 1 ]"));
    assert (len == 5);
@@ -562,7 +562,7 @@ test_bson_as_json_spacing (void)
    assert (len == 3);
    bson_free (str);
 
-   BSON_APPEND_INT32 (&d, "a", 1);
+   BSON_APPEND_INT64 (&d, "a", 1);
    str = bson_as_json (&d, &len);
    assert (0 == strcmp (str, "{ \"a\" : 1 }"));
    assert (len == 11);

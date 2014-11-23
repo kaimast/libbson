@@ -270,9 +270,6 @@ _bcon_append_single (bson_t        *bson,
       bson_append_code_with_scope (bson, key, -1, val->CODEWSCOPE.js,
                                    val->CODEWSCOPE.scope);
       break;
-   case BCON_TYPE_INT32:
-      bson_append_int32 (bson, key, -1, val->INT32);
-      break;
    case BCON_TYPE_TIMESTAMP: {
          bson_append_timestamp (bson, key, -1, val->TIMESTAMP.timestamp,
                                 val->TIMESTAMP.increment);
@@ -388,10 +385,6 @@ _bcon_extract_single (const bson_iter_t *iter,
          bson_init_static (val->CODEWSCOPE.scope, buf, len);
          break;
       }
-   case BCON_TYPE_INT32:
-      CHECK_TYPE (BSON_TYPE_INT32);
-      *val->INT32 = bson_iter_int32 (iter);
-      break;
    case BCON_TYPE_TIMESTAMP:
       CHECK_TYPE (BSON_TYPE_TIMESTAMP);
       bson_iter_timestamp (iter, val->TIMESTAMP.timestamp,
@@ -523,9 +516,6 @@ _bcon_append_tokenize (va_list       *ap,
          u->CODEWSCOPE.js = va_arg (*ap, char *);
          u->CODEWSCOPE.scope = va_arg (*ap, bson_t *);
          break;
-      case BCON_TYPE_INT32:
-         u->INT32 = va_arg (*ap, int32_t);
-         break;
       case BCON_TYPE_TIMESTAMP:
          u->TIMESTAMP.timestamp = va_arg (*ap, uint32_t);
          u->TIMESTAMP.increment = va_arg (*ap, uint32_t);
@@ -652,9 +642,6 @@ _bcon_extract_tokenize (va_list        *ap,
       case BCON_TYPE_CODEWSCOPE:
          u->CODEWSCOPE.js = va_arg (*ap, const char **);
          u->CODEWSCOPE.scope = va_arg (*ap, bson_t *);
-         break;
-      case BCON_TYPE_INT32:
-         u->INT32 = va_arg (*ap, int32_t *);
          break;
       case BCON_TYPE_TIMESTAMP:
          u->TIMESTAMP.timestamp = va_arg (*ap, uint32_t *);

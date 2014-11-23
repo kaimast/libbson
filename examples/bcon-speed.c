@@ -62,7 +62,7 @@ main (int   argc,
          BCON_APPEND(&bson,
             "foo", "{",
                "bar", "{",
-                  "baz", "[", BCON_INT32(1), BCON_INT32(2), BCON_INT32(3), "]",
+                  "baz", "[", BCON_INT64(1), BCON_INT64(2), BCON_INT64(3), "]",
                "}",
             "}"
          );
@@ -70,9 +70,9 @@ main (int   argc,
          bson_append_document_begin(&bson, "foo", -1, &foo);
          bson_append_document_begin(&foo, "bar", -1, &bar);
          bson_append_array_begin(&bar, "baz", -1, &baz);
-         bson_append_int32(&baz, "0", -1, 1);
-         bson_append_int32(&baz, "1", -1, 2);
-         bson_append_int32(&baz, "2", -1, 3);
+         bson_append_int64(&baz, "0", -1, 1);
+         bson_append_int64(&baz, "1", -1, 2);
+         bson_append_int64(&baz, "2", -1, 3);
          bson_append_array_end(&bar, &baz);
          bson_append_document_end(&foo, &bar);
          bson_append_document_end(&bson, &foo);

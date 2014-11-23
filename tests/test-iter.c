@@ -95,7 +95,7 @@ test_bson_iter_mixed (void)
    assert(bson_append_utf8(b2, "foo", -1, "bar", -1));
    assert(bson_append_code(b, "0", -1, "var a = {};"));
    assert(bson_append_code_with_scope(b, "1", -1, "var b = {};", b2));
-   assert(bson_append_int32(b, "2", -1, 1234));
+   assert(bson_append_int64(b, "2", -1, 1234));
    assert(bson_append_int64(b, "3", -1, 4567));
    assert(bson_append_time_t(b, "4", -1, 123456));
    assert(bson_iter_init(&iter, b));
@@ -104,7 +104,7 @@ test_bson_iter_mixed (void)
    assert(bson_iter_next(&iter));
    assert(BSON_ITER_HOLDS_CODEWSCOPE(&iter));
    assert(bson_iter_next(&iter));
-   assert(BSON_ITER_HOLDS_INT32(&iter));
+   assert(BSON_ITER_HOLDS_INT64(&iter));
    assert(bson_iter_next(&iter));
    assert(BSON_ITER_HOLDS_INT64(&iter));
    assert(bson_iter_next(&iter));
@@ -251,7 +251,6 @@ test_bson_iter_fuzz (void)
          case BSON_TYPE_CODE:
          case BSON_TYPE_SYMBOL:
          case BSON_TYPE_CODEWSCOPE:
-         case BSON_TYPE_INT32:
          case BSON_TYPE_TIMESTAMP:
          case BSON_TYPE_INT64:
          case BSON_TYPE_MAXKEY:
@@ -299,7 +298,7 @@ test_bson_iter_next_after_finish (void)
    int i;
 
    b = bson_new();
-   assert(bson_append_int32(b, "key", -1, 1234));
+   assert(bson_append_int64(b, "key", -1, 1234));
    assert(bson_iter_init(&iter, b));
    assert(bson_iter_next(&iter));
    for (i = 0; i < 1000; i++) {
@@ -332,13 +331,13 @@ test_bson_iter_overwrite_int32 (void)
    bson_t b;
 
    bson_init(&b);
-   assert(bson_append_int32(&b, "key", -1, 1234));
+   assert(bson_append_int64(&b, "key", -1, 1234));
    assert(bson_iter_init_find(&iter, &b, "key"));
-   assert(BSON_ITER_HOLDS_INT32(&iter));
-   bson_iter_overwrite_int32(&iter, 4321);
+   assert(BSON_ITER_HOLDS_INT64(&iter));
+   bson_iter_overwrite_int64(&iter, 4321);
    assert(bson_iter_init_find(&iter, &b, "key"));
-   assert(BSON_ITER_HOLDS_INT32(&iter));
-   assert_cmpint(bson_iter_int32(&iter), ==, 4321);
+   assert(BSON_ITER_HOLDS_INT64(&iter));
+   assert_cmpint(bson_iter_int64(&iter), ==, 4321);
    bson_destroy(&b);
 }
 
@@ -407,9 +406,9 @@ test_bson_iter_recurse (void)
 
    bson_init(&b);
    bson_init(&cb);
-   assert(bson_append_int32(&cb, "0", 1, 0));
-   assert(bson_append_int32(&cb, "1", 1, 1));
-   assert(bson_append_int32(&cb, "2", 1, 2));
+   assert(bson_append_int64(&cb, "0", 1, 0));
+   assert(bson_append_int64(&cb, "1", 1, 1));
+   assert(bson_append_int64(&cb, "2", 1, 2));
    assert(bson_append_array(&b, "key", -1, &cb));
    assert(bson_iter_init_find(&iter, &b, "key"));
    assert(BSON_ITER_HOLDS_ARRAY(&iter));
@@ -430,9 +429,9 @@ test_bson_iter_init_find_case (void)
    bson_iter_t iter;
 
    bson_init(&b);
-   assert(bson_append_int32(&b, "FOO", -1, 1234));
+   assert(bson_append_int64(&b, "FOO", -1, 1234));
    assert(bson_iter_init_find_case(&iter, &b, "foo"));
-   assert_cmpint(bson_iter_int32(&iter), ==, 1234);
+   assert_cmpint(bson_iter_int64(&iter), ==, 1234);
    bson_destroy(&b);
 }
 
@@ -447,24 +446,24 @@ test_bson_iter_find_descendant (void)
    b = get_bson(BINARY_DIR"/dotkey.bson");
    assert(bson_iter_init(&iter, b));
    assert(bson_iter_find_descendant(&iter, "a.b.c.0", &desc));
-   assert(BSON_ITER_HOLDS_INT32(&desc));
-   assert(bson_iter_int32(&desc) == 1);
+   assert(BSON_ITER_HOLDS_INT64(&desc));
+   assert(bson_iter_int64(&desc) == 1);
    bson_destroy(b);
 
-   b = BCON_NEW ("foo", "{", "bar", "[", "{", "baz", BCON_INT32 (1), "}", "]", "}");
+   b = BCON_NEW ("foo", "{", "bar", "[", "{", "baz", BCON_INT64 (1), "}", "]", "}");
    assert (bson_iter_init (&iter, b));
    assert (bson_iter_find_descendant (&iter, "foo.bar.0.baz", &desc));
-   assert (BSON_ITER_HOLDS_INT32 (&desc));
-   assert (bson_iter_int32 (&desc) == 1);
+   assert (BSON_ITER_HOLDS_INT64 (&desc));
+   assert (bson_iter_int64 (&desc) == 1);
    bson_destroy (b);
 
-   b = BCON_NEW ("nModified", BCON_INT32 (1), "n", BCON_INT32 (2));
+   b = BCON_NEW ("nModified", BCON_INT64 (1), "n", BCON_INT64 (2));
    assert (bson_iter_init (&iter, b));
    assert (bson_iter_find_descendant (&iter, "n", &desc));
    assert (!strcmp (bson_iter_key (&desc), "n"));
    bson_destroy (b);
 
-   b = BCON_NEW ("", BCON_INT32 (1), "n", BCON_INT32 (2));
+   b = BCON_NEW ("", BCON_INT64 (1), "n", BCON_INT64 (2));
    assert (bson_iter_init (&iter, b));
    assert (bson_iter_find_descendant (&iter, "n", &desc));
    assert (!strcmp (bson_iter_key (&desc), "n"));
@@ -479,8 +478,8 @@ test_bson_iter_as_bool (void)
    bson_t b;
 
    bson_init(&b);
-   bson_append_int32(&b, "int32[true]", -1, 1);
-   bson_append_int32(&b, "int32[false]", -1, 0);
+   bson_append_int64(&b, "int32[true]", -1, 1);
+   bson_append_int64(&b, "int32[false]", -1, 0);
    bson_append_int64(&b, "int64[true]", -1, 1);
    bson_append_int64(&b, "int64[false]", -1, 0);
    bson_append_double(&b, "int64[true]", -1, 1.0);

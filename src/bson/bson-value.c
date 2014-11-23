@@ -109,9 +109,6 @@ bson_value_copy (const bson_value_t *src, /* IN */
               src->value.v_codewscope.scope_data,
               dst->value.v_codewscope.scope_len);
       break;
-   case BSON_TYPE_INT32:
-      dst->value.v_int32 = src->value.v_int32;
-      break;
    case BSON_TYPE_TIMESTAMP:
       dst->value.v_timestamp.timestamp = src->value.v_timestamp.timestamp;
       dst->value.v_timestamp.increment = src->value.v_timestamp.increment;
@@ -169,7 +166,6 @@ bson_value_destroy (bson_value_t *value) /* IN */
    case BSON_TYPE_BOOL:
    case BSON_TYPE_DATE_TIME:
    case BSON_TYPE_NULL:
-   case BSON_TYPE_INT32:
    case BSON_TYPE_TIMESTAMP:
    case BSON_TYPE_INT64:
    case BSON_TYPE_MAXKEY:

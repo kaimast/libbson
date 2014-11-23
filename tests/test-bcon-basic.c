@@ -257,7 +257,7 @@ test_codewscope (void)
    bson_init (&expected);
    bson_init (&scope);
 
-   bson_append_int32(&scope, "b", -1, 10);
+   bson_append_int64(&scope, "b", -1, 10);
 
    bson_append_code_with_scope (&expected, "foo", -1, "var a = b;", &scope);
 
@@ -279,9 +279,9 @@ test_int32 (void)
    bson_init (&bcon);
    bson_init (&expected);
 
-   bson_append_int32 (&expected, "foo", -1, 100);
+   bson_append_int64 (&expected, "foo", -1, 100);
 
-   BCON_APPEND (&bcon, "foo", BCON_INT32 (100));
+   BCON_APPEND (&bcon, "foo", BCON_INT64 (100));
 
    bson_eq_bson (&bcon, &expected);
 
@@ -464,8 +464,8 @@ test_inline_nested (void)
    bson_init (&third);
 
    bson_append_utf8 (&third, "hello", -1, "world", -1);
-   bson_append_int32 (&bar, "0", -1, 1);
-   bson_append_int32 (&bar, "1", -1, 2);
+   bson_append_int64 (&bar, "0", -1, 1);
+   bson_append_int64 (&bar, "1", -1, 2);
    bson_append_document (&bar, "2", -1, &third);
    bson_append_array (&foo, "bar", -1, &bar);
    bson_append_document (&expected, "foo", -1, &foo);
@@ -473,7 +473,7 @@ test_inline_nested (void)
    BCON_APPEND(&bcon,
         "foo", "{",
             "bar", "[",
-                BCON_INT32(1), BCON_INT32(2), "{",
+                BCON_INT64(1), BCON_INT64(2), "{",
                     "hello", "world",
                 "}",
             "]",
@@ -536,7 +536,7 @@ test_iter (void)
    bson_init (&bcon);
    bson_init (&expected);
 
-   bson_append_int32 (&expected, "foo", -1, 100);
+   bson_append_int64 (&expected, "foo", -1, 100);
    bson_iter_init_find (&iter, &expected, "foo");
 
    BCON_APPEND (&bcon, "foo", BCON_ITER(&iter));

@@ -171,7 +171,7 @@ test_bson_writer_null_realloc_2 (void)
    }
 
    assert(bson_writer_begin(writer, &b));
-   assert(!bson_append_int32(b, "a", -1, 123));
+   assert(!bson_append_int64(b, "a", -1, 123));
    bson_writer_end(writer);
 
    r = memcmp(buf, testdata, 32);

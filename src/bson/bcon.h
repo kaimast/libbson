@@ -99,8 +99,6 @@ BCON_ENSURE_DECLARE (const_bson_iter_ptr, const bson_iter_t *)
    BCON_MAGIC, BCON_TYPE_CODEWSCOPE, \
    BCON_ENSURE (const_char_ptr, (_js)), \
    BCON_ENSURE (const_bson_ptr, (_scope))
-#define BCON_INT32(_val) \
-   BCON_MAGIC, BCON_TYPE_INT32, BCON_ENSURE (int32, (_val))
 #define BCON_TIMESTAMP(_timestamp, _increment) \
    BCON_MAGIC, BCON_TYPE_TIMESTAMP, \
    BCON_ENSURE (int32, (_timestamp)), \
@@ -151,8 +149,6 @@ BCON_ENSURE_DECLARE (const_bson_iter_ptr, const bson_iter_t *)
    BCONE_MAGIC, BCON_TYPE_CODEWSCOPE, \
    BCON_ENSURE_STORAGE (const_char_ptr_ptr, (_js)), \
    BCON_ENSURE_STORAGE (bson_ptr, (_scope))
-#define BCONE_INT32(_val) BCONE_MAGIC, BCON_TYPE_INT32, \
-   BCON_ENSURE_STORAGE (int32_ptr, (_val))
 #define BCONE_TIMESTAMP(_timestamp, _increment) \
    BCONE_MAGIC, BCON_TYPE_TIMESTAMP, \
    BCON_ENSURE_STORAGE (int32_ptr, (_timestamp)), \
@@ -186,7 +182,6 @@ typedef enum
    BCON_TYPE_CODE,
    BCON_TYPE_SYMBOL,
    BCON_TYPE_CODEWSCOPE,
-   BCON_TYPE_INT32,
    BCON_TYPE_TIMESTAMP,
    BCON_TYPE_INT64,
    BCON_TYPE_MAXKEY,

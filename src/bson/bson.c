@@ -1106,33 +1106,6 @@ bson_append_double (bson_t     *bson,
 
 
 bool
-bson_append_int32 (bson_t      *bson,
-                   const char  *key,
-                   int          key_length,
-                   int32_t value)
-{
-   static const uint8_t type = BSON_TYPE_INT32;
-   uint32_t value_le;
-
-   bson_return_val_if_fail (bson, false);
-   bson_return_val_if_fail (key, false);
-
-   if (key_length < 0) {
-      key_length = (int)strlen (key);
-   }
-
-   value_le = BSON_UINT32_TO_LE (value);
-
-   return _bson_append (bson, 4,
-                        (1 + key_length + 1 + 4),
-                        1, &type,
-                        key_length, key,
-                        1, &gZero,
-                        4, &value_le);
-}
-
-
-bool
 bson_append_int64 (bson_t      *bson,
                    const char  *key,
                    int          key_length,
@@ -1298,9 +1271,6 @@ bson_append_iter (bson_t            *bson,
             bson_destroy (&doc);
          }
       }
-      break;
-   case BSON_TYPE_INT32:
-      ret = bson_append_int32 (bson, key, key_length, bson_iter_int32 (iter));
       break;
    case BSON_TYPE_TIMESTAMP:
       {
@@ -1751,9 +1721,6 @@ bson_append_value (bson_t             *bson,
                                             &local);
          bson_destroy (&local);
       }
-      break;
-   case BSON_TYPE_INT32:
-      ret = bson_append_int32 (bson, key, key_length, value->value.v_int32);
       break;
    case BSON_TYPE_TIMESTAMP:
       ret = bson_append_timestamp (bson, key, key_length,

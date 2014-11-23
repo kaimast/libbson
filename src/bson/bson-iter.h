@@ -78,9 +78,6 @@ BSON_BEGIN_DECLS
 #define BSON_ITER_HOLDS_CODEWSCOPE(iter) \
    (bson_iter_type ((iter)) == BSON_TYPE_CODEWSCOPE)
 
-#define BSON_ITER_HOLDS_INT32(iter) \
-   (bson_iter_type ((iter)) == BSON_TYPE_INT32)
-
 #define BSON_ITER_HOLDS_TIMESTAMP(iter) \
    (bson_iter_type ((iter)) == BSON_TYPE_TIMESTAMP)
 
@@ -213,29 +210,6 @@ bool
 bson_iter_init_find_case (bson_iter_t  *iter,
                           const bson_t *bson,
                           const char   *key);
-
-
-int32_t
-bson_iter_int32 (const bson_iter_t *iter);
-
-
-/**
- * bson_iter_int32_unsafe:
- * @iter: A bson_iter_t.
- *
- * Similar to bson_iter_int32() but with no integrity checking.
- *
- * Returns: A 32-bit signed integer.
- */
-static BSON_INLINE int32_t
-bson_iter_int32_unsafe (const bson_iter_t *iter)
-{
-   int32_t val;
-
-   memcpy (&val, iter->raw + iter->d1, sizeof (val));
-   return BSON_UINT32_FROM_LE (val);
-}
-
 
 int64_t
 bson_iter_int64 (const bson_iter_t *iter);
@@ -460,12 +434,6 @@ bson_iter_type_unsafe (const bson_iter_t *iter)
 bool
 bson_iter_recurse (const bson_iter_t *iter,
                    bson_iter_t       *child);
-
-
-void
-bson_iter_overwrite_int32 (bson_iter_t *iter,
-                           int32_t value);
-
 
 void
 bson_iter_overwrite_int64 (bson_iter_t *iter,

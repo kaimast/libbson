@@ -127,9 +127,6 @@ BSON_BEGIN_DECLS
 #define BSON_APPEND_DOCUMENT(b,key,val) \
       bson_append_document (b, key, (int) strlen (key), val)
 
-#define BSON_APPEND_INT32(b,key,val) \
-      bson_append_int32 (b, key, (int) strlen (key), val)
-
 #define BSON_APPEND_INT64(b,key,val) \
       bson_append_int64 (b, key, (int) strlen (key), val)
 
@@ -732,24 +729,6 @@ bson_append_array_begin (bson_t     *bson,
 bool
 bson_append_array_end (bson_t *bson,
                        bson_t *child);
-
-
-/**
- * bson_append_int32:
- * @bson: A bson_t.
- * @key: The key for the field.
- * @value: The int32_t 32-bit integer value.
- *
- * Appends a new field of type BSON_TYPE_INT32 to @bson.
- *
- * Returns: true if successful; false if append would overflow max size.
- */
-bool
-bson_append_int32 (bson_t      *bson,
-                   const char  *key,
-                   int          key_length,
-                   int32_t value);
-
 
 /**
  * bson_append_int64:
